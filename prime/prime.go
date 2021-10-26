@@ -49,3 +49,40 @@ func getNextPrime(currentPrime uint64, primeList *[]bool) uint64 {
 	}
 	return nextPrime
 }
+
+// GeneratePrimesWithoutUsingEvenNumbers follows de Sieve of Eratosthenes to calculate a list with the prime numbers between 2 and n https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
+// It doesn't iterate over even numbers
+func GeneratePrimesWithoutUsingEvenNumbers(n uint64) []bool {
+	primeList := make([]bool, n+1)
+	for i := range primeList {
+		if i%2 == 0 {
+			primeList[i] = false
+		} else {
+			primeList[i] = true
+		}
+	}
+	primeList[1], primeList[2] = false, true
+
+	prime := uint64(3)
+	sqrtN := uint64(math.Ceil(math.Sqrt(float64(n))))
+	for prime <= sqrtN {
+		// The multiples of each primer shall be marked as non prime.
+		for i := prime * prime; i <= n; i += prime {
+			primeList[i] = false
+		}
+
+		prime = getNextOddPrime(prime, &primeList)
+	}
+
+	return primeList
+}
+
+// getNextOddPrime returns the next number marked as non prime in the primeLis
+func getNextOddPrime(currentPrime uint64, primeList *[]bool) uint64 {
+	n := uint64(len(*primeList))
+	nextPrime := currentPrime + 2
+	for nextPrime < n && !(*primeList)[nextPrime] {
+		nextPrime += 2
+	}
+	return nextPrime
+}
