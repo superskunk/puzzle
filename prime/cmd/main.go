@@ -38,19 +38,22 @@ func menu() action {
 
 func main() {
 	stdin = bufio.NewReader(os.Stdin)
-
+	var n uint64
 	var option action
+	printPrimes(5)
+
 	for option != exit {
 		option = menu()
 		switch option {
 		case isPrimeAction:
-			var n uint64
 			fmt.Print("Introduce a Number: ")
 			fmt.Scanf("%d", &n)
 			isPrime(n)
 		case listOfPrimesAction:
 			fmt.Println("Generating a list of primes")
-
+			fmt.Print("Introduce the number up to you want to generate prime numbers: ")
+			fmt.Scanf("%d", &n)
+			printPrimes(n)
 		}
 	}
 
@@ -61,5 +64,15 @@ func isPrime(n uint64) {
 		fmt.Printf("Number %d is a prime number\n", n)
 	} else {
 		fmt.Printf("Number %d is not a prime number\n", n)
+	}
+}
+
+func printPrimes(n uint64) {
+	fmt.Println()
+	numbers := prime.GeneratePrimes(n)
+	for number, isPrime := range numbers {
+		if isPrime {
+			fmt.Printf("%d ", number)
+		}
 	}
 }
